@@ -5,7 +5,7 @@ import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
 import Tabs from "react-bootstrap/Tabs";
 import Tab from "react-bootstrap/Tab";
-import Nav from "react-bootstrap/Nav";
+import { FiThumbsUp, FiThumbsDown } from "react-icons/fi";
 
 const Home = (props) => (
   <div id="home">
@@ -124,6 +124,19 @@ const Home = (props) => (
         <br></br>
       </div>
       <br></br>
+      <div id="feedback-row">
+        <div id="feedback-text">
+          <h2>Did you understand the translation above? </h2>
+        </div>
+        <div id="feedback-buttons">
+          <Button>
+            <FiThumbsUp />
+          </Button>{" "}
+          <Button>
+            <FiThumbsDown />
+          </Button>
+        </div>
+      </div>
       <br></br>
       <Button>Finish Translation</Button>{" "}
       <Button>Continue the Conversation</Button>
@@ -131,34 +144,40 @@ const Home = (props) => (
     <div id="conversation-history">
       <h2>Conversation Summary</h2>
       <br></br>
-      <p>Your conversation is complete! Below you can find the conversation history in both English and Spanish.</p>
-      <p>After reviewing your conversation, please click the button below to complete a Qualtrics survey about your experience.</p>
+      <p>
+        Your conversation is complete! Below you can find the conversation
+        history in both English and Spanish.
+      </p>
+      <p>
+        After reviewing your conversation, please click the button below to
+        complete a Qualtrics survey about your experience.
+      </p>
       <br></br>
       <div id="summary-card">
-      <Card>
-        <Card.Header>
-          <Tabs defaultActiveKey="english">
-            <Tab eventKey="english" title="English">
+        <Card>
+          <Card.Header>
+            <Tabs defaultActiveKey="english">
+              <Tab eventKey="english" title="English">
                 <br></br>
-              <Card.Body>
-                <Card.Title>Conversation History</Card.Title>
-                <Card.Text>Amaya: Hello, Kamil!</Card.Text>
-                <Card.Text>Amaya: Hello, Kamil!</Card.Text>
-                <Card.Text>Amaya: Hello, Kamil!</Card.Text>
-                <Card.Text>Amaya: Hello, Kamil!</Card.Text>
-              </Card.Body>
-            </Tab>
-            <Tab eventKey="spanish" title="Español">
-            <br></br>
-              <Card.Body>
-                <Card.Title>Historial de conversación</Card.Title>
-                <Card.Text>yo</Card.Text>
-              </Card.Body>
-            </Tab>
-          </Tabs>
-        </Card.Header>
-      </Card>
-      <br></br>
+                <Card.Body>
+                  <Card.Title>Conversation History</Card.Title>
+                  <Card.Text>Amaya: Hello, Kamil!</Card.Text>
+                  <Card.Text>Amaya: Hello, Kamil!</Card.Text>
+                  <Card.Text>Amaya: Hello, Kamil!</Card.Text>
+                  <Card.Text>Amaya: Hello, Kamil!</Card.Text>
+                </Card.Body>
+              </Tab>
+              <Tab eventKey="spanish" title="Español">
+                <br></br>
+                <Card.Body>
+                  <Card.Title>Historial de conversación</Card.Title>
+                  <Card.Text>yo</Card.Text>
+                </Card.Body>
+              </Tab>
+            </Tabs>
+          </Card.Header>
+        </Card>
+        <br></br>
       </div>
       <Button>Complete Survey</Button>
     </div>
