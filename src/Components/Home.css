@@ -119,12 +119,12 @@ Label {
   color: black;
 }
 
-#conversation-history > .btn-primary,
+#survey-button > .btn-primary,
 .btn-primary:hover,
 .btn-primary:active,
 .btn-primary:visited {
-  background-color: #fff !important;
-  border-color: #fff !important;
+  background-color: #d6e5e3 !important;
+  border-color: #d6e5e3 !important;
   color: black;
 }
 
