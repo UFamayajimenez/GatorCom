@@ -138,19 +138,14 @@ const Home = (props) => (
         </div>
       </div>
       <br></br>
-      <Button>Finish Translation</Button>{" "}
-      <Button>Continue the Conversation</Button>
+      <Button>Finish Conversation</Button> <Button>Respond to Amaya</Button>
     </div>
     <div id="conversation-history">
       <h2>Conversation Summary</h2>
       <br></br>
       <p>
-        Your conversation is complete! Below you can find the conversation
-        history in both English and Spanish.
-      </p>
-      <p>
-        After reviewing your conversation, please click the button below to
-        complete a Qualtrics survey about your experience.
+        Thank you for using GatorCom! To view your conversation history choose
+        either English or Spanish below.
       </p>
       <br></br>
       <div id="summary-card">
@@ -160,18 +155,32 @@ const Home = (props) => (
               <Tab eventKey="english" title="English">
                 <br></br>
                 <Card.Body>
+                  <Card.Text>
+                    Your conversation is complete! Below you can find the
+                    conversation history in English.
+                  </Card.Text>
+                  <Card.Text>
+                    After reviewing your conversation, please click the button
+                    below to complete a Qualtrics survey about your experience.
+                  </Card.Text>
                   <Card.Title>Conversation History</Card.Title>
-                  <Card.Text>Amaya: Hello, Kamil!</Card.Text>
-                  <Card.Text>Amaya: Hello, Kamil!</Card.Text>
-                  <Card.Text>Amaya: Hello, Kamil!</Card.Text>
                   <Card.Text>Amaya: Hello, Kamil!</Card.Text>
                 </Card.Body>
               </Tab>
               <Tab eventKey="spanish" title="Español">
                 <br></br>
                 <Card.Body>
+                  <Card.Text>
+                    ¡Tu conversación está completa! A continuación puede
+                    encontrar el historial de conversaciones en español.
+                  </Card.Text>
+                  <Card.Text>
+                    Después de revisar su conversación, haga clic en el botón a
+                    continuación para completar una encuesta de Qualtrics sobre
+                    su experiencia.
+                  </Card.Text>
                   <Card.Title>Historial de conversación</Card.Title>
-                  <Card.Text>yo</Card.Text>
+                  <Card.Text>Amaya: ¡Hola, Kamil!</Card.Text>
                 </Card.Body>
               </Tab>
             </Tabs>
