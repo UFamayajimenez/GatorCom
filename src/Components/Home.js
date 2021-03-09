@@ -6,14 +6,13 @@ import Card from "react-bootstrap/Card";
 import Tabs from "react-bootstrap/Tabs";
 import Tab from "react-bootstrap/Tab";
 import { FiThumbsUp, FiThumbsDown } from "react-icons/fi";
+import { Link, Element, animateScroll } from "react-scroll";
 
 const Home = (props) => {
-
   const [showRestOfPage, setShowRestOfPage] = React.useState(false);
   const [englishTurn, setEnglishTurn] = React.useState(true);
   const [englishSpeakerName, setEnglishSpeakerName] = React.useState(null);
   const [spanishSpeakerName, setSpanishSpeakerName] = React.useState(null);
-
 
   function getFixedTranslatedString(whichOne) {
     if (englishTurn) {
@@ -47,7 +46,9 @@ const Home = (props) => {
           return spanishSpeakerName + ", es tu turno.";
         case "translation-window2":
           return (
-            "Ingrese la frase que quieres traducir por " + englishSpeakerName + " debajo."
+            "Ingrese la frase que quieres traducir por " +
+            englishSpeakerName +
+            " debajo."
           );
         case "translation-window3":
           return "Traducir";
@@ -79,13 +80,14 @@ const Home = (props) => {
 
   const RestOfThePage = () => (
     <div>
+      <Element name="translation-window" className="element"></Element>
       <div id="translation-window1">
         <h2>{getFixedTranslatedString("translation-window1")}</h2>
         <div id="translation-form1">
           <Form>
             <Form.Group controlId="exampleForm.ControlTextarea1">
               <Form.Label>
-              {getFixedTranslatedString("translation-window2")}
+                {getFixedTranslatedString("translation-window2")}
               </Form.Label>
               <br></br>
               <br></br>
@@ -94,9 +96,21 @@ const Home = (props) => {
           </Form>
           <br></br>
           <br></br>
-          <Button>{getFixedTranslatedString("translation-window3")}</Button>
+          <Link
+            activeClass="active"
+            to="translation-results"
+            spy={true}
+            smooth={true}
+            offset={0}
+            duration={500}
+          >
+            <div id="white-button">
+              <Button>{getFixedTranslatedString("translation-window3")}</Button>
+            </div>
+          </Link>
         </div>
       </div>
+      <Element name="translation-results" className="element"></Element>
       <div id="translation-window2">
         <h2>{getFixedTranslatedString("translation-results1")}</h2>
         <h2>{getFixedTranslatedString("translation-results2")}</h2>
@@ -169,18 +183,56 @@ const Home = (props) => {
             <h2>{getFixedTranslatedString("translation-results3")}</h2>
           </div>
           <div id="feedback-buttons">
-            <Button>
-              <FiThumbsUp />
-            </Button>{" "}
-            <Button>
-              <FiThumbsDown />
-            </Button>
+            <div id="green-button">
+              <Button>
+                <FiThumbsUp />
+              </Button>
+              <Button>
+                <FiThumbsDown />
+              </Button>
+            </div>
           </div>
         </div>
         <br></br>
-        <Button>{getFixedTranslatedString("translation-results4")}</Button> <Button>{getFixedTranslatedString("translation-results5")}</Button>
+        <Link
+          activeClass="active"
+          to="conversation-summary"
+          spy={true}
+          smooth={true}
+          offset={0}
+          duration={500}
+        >
+          <Button
+            style={{
+              color: "black",
+              backgroundColor: "#d6e5e3",
+              borderColor: "#d6e5e3",
+            }}
+          >
+            {getFixedTranslatedString("translation-results4")}
+          </Button>{" "}
+        </Link>
+        <Link
+          activeClass="active"
+          to="translation-window"
+          spy={true}
+          smooth={true}
+          offset={0}
+          duration={500}
+        >
+          <Button
+            style={{
+              color: "black",
+              backgroundColor: "#d6e5e3",
+              borderColor: "#d6e5e3",
+            }}
+          >
+            {getFixedTranslatedString("translation-results5")}
+          </Button>
+        </Link>
       </div>
       <div id="conversation-history">
+        <Element name="conversation-summary" className="element"></Element>
         <h2>Conversation Summary</h2>
         <br></br>
         <p>
@@ -206,7 +258,7 @@ const Home = (props) => {
                     </Card.Text>
                     <Card.Title>Conversation History</Card.Title>
                     <Card.Text>Amaya: Hello, Kamil!</Card.Text>
-                    <div id="survey-button">
+                    <div id="green-button">
                       <Button>Answer the Survey</Button>
                     </div>
                   </Card.Body>
@@ -225,7 +277,7 @@ const Home = (props) => {
                     </Card.Text>
                     <Card.Title>Historial de conversación</Card.Title>
                     <Card.Text>Amaya: ¡Hola, Kamil!</Card.Text>
-                    <div id="survey-button">
+                    <div id="green-button">
                       <Button> Responde La Encuesta</Button>
                     </div>
                   </Card.Body>
@@ -262,7 +314,7 @@ const Home = (props) => {
                 <Form.Control
                   type="text"
                   placeholder="English speaker's name"
-                  onChange={(e) => (setEnglishSpeakerName(e.target.value))}
+                  onChange={(e) => setEnglishSpeakerName(e.target.value)}
                 />
               </Form.Group>
               <br></br>
@@ -274,15 +326,27 @@ const Home = (props) => {
                 <Form.Control
                   type="text"
                   placeholder="Spanish speaker's name"
-                  onChange={(e) => (setSpanishSpeakerName(e.target.value))}
+                  onChange={(e) => setSpanishSpeakerName(e.target.value)}
                 />
               </Form.Group>
             </Form>
             <br></br>
-            <Button onClick={SetUserNames}>Let's Start Translating</Button>
+            <Link
+              activeClass="active"
+              to="translation-window"
+              spy={true}
+              smooth={true}
+              offset={0}
+              duration={500}
+            >
+              <div id="green-button">
+                <Button onClick={SetUserNames}>Let's Start Translating</Button>
+              </div>
+            </Link>
           </div>
         </div>
       </div>
+      <Element name="translation-window" className="element"></Element>
       <div>{showRestOfPage ? <RestOfThePage /> : null}</div>
     </div>
   );
