@@ -16,7 +16,14 @@ const Home = (props) => {
   const [spanishSpeakerName, setSpanishSpeakerName] = React.useState(null);
   const [textToTranslate, setTextToTranslate] = React.useState(null);
   const [translatedText, setTranslatedText] = React.useState(null);
-  const [understood, setUnderstood] = React.useState(null);
+  const [understoodEnglishCount, setUnderstoodEnglishCount] = React.useState(0);
+  const [totalEnglishCount, setTotalEnglishCount] = React.useState(0);
+  const [understoodSpanishCount, setUnderstoodSpanishCount] = React.useState(0);
+  const [totalSpanishCount, setTotalSpanishCount] = React.useState(0);
+  const [convoInEnglish, setConvoInEnglish] = React.useState([]);
+  const [convoInSpanish, setConvoInSpanish] = React.useState([]);
+
+
 
   const translate = setCORS("http://cors-anywhere.herokuapp.com/");
 
@@ -98,11 +105,35 @@ const Home = (props) => {
   };
 
   const onThumbsUp = () => {
-    setUnderstood("understood");
+    if(englishTurn){
+        let oldTotalCount = totalEnglishCount;
+        oldTotalCount +=1;
+        setTotalEnglishCount(oldTotalCount);
+
+        let oldUnderstoodCount = understoodEnglishCount;
+        oldUnderstoodCount +=1;
+        setUnderstoodEnglishCount(oldUnderstoodCount);
+    }else{
+        let oldTotalCount = totalSpanishCount;
+        oldTotalCount +=1;
+        setTotalSpanishCount(oldTotalCount);
+
+        let oldCount = understoodSpanishCount;
+        oldCount +=1;
+        setUnderstoodSpanishCount(oldCount);
+    }
   };
 
   const onThumbsDown = () => {
-    setUnderstood("not-understood");
+    if(englishTurn){
+        let oldTotalCount = totalEnglishCount;
+        oldTotalCount +=1;
+        setTotalEnglishCount(oldTotalCount);
+    }else{
+        let oldTotalCount = totalSpanishCount;
+        oldTotalCount +=1;
+        setTotalSpanishCount(oldTotalCount);
+    }
   };
 
   const translateText = async () => {
@@ -110,21 +141,25 @@ const Home = (props) => {
 
     if (textToTranslate != null) {
       if (englishTurn) {
+          convoInEnglish.push(textToTranslate);
         //english to spanish
         translate(textToTranslate, { to: "es" })
           .then((res) => {
             console.log(res.text);
             setTranslatedText(res.text);
+            convoInSpanish.push(res.text);
           })
           .catch((err) => {
             console.error(err);
           });
       } else {
+          convoInSpanish.push(textToTranslate);
         //spanish to english
         translate(textToTranslate, { to: "en" })
           .then((res) => {
             console.log(res.text);
             setTranslatedText(res.text);
+            convoInEnglish.push(res.text);
           })
           .catch((err) => {
             console.error(err);
@@ -312,8 +347,9 @@ const Home = (props) => {
                       <Tab eventKey="english" title="English">
                         <br></br>
                         <Card.Body>
+                          {understoodEnglishCount == totalEnglishCount ? <Card.Text>Your conversation is complete! Congrats! Everything you said was understood by {spanishSpeakerName}.</Card.Text> : <Card.Text>Not everything you said was understood by {spanishSpeakerName}.</Card.Text>}
                           <Card.Text>
-                            Your conversation is complete! Below you can find
+                            Below you can find
                             the conversation history in English.
                           </Card.Text>
                           <Card.Text>
@@ -322,7 +358,9 @@ const Home = (props) => {
                             your experience.
                           </Card.Text>
                           <Card.Title>Conversation History</Card.Title>
-                          <Card.Text>Amaya: Hello, Kamil!</Card.Text>
+                          {convoInEnglish.map((value, index) => {
+                            return <Card.Text>{index % 2 == 0 ? englishSpeakerName + ": " + value : spanishSpeakerName + ": " + value}</Card.Text>
+                        })}
                           <div id="green-button">
                             <Button>Answer the Survey</Button>
                           </div>
@@ -331,8 +369,9 @@ const Home = (props) => {
                       <Tab eventKey="spanish" title="Español">
                         <br></br>
                         <Card.Body>
+                          {understoodSpanishCount == totalSpanishCount ? <Card.Text>¡Tu conversación está completa! ¡Felicitaciones! Todo lo que dijiste fue entendido por {englishSpeakerName}.</Card.Text> : <Card.Text>{englishSpeakerName} no entendió todo lo que dijiste.</Card.Text>}
                           <Card.Text>
-                            ¡Tu conversación está completa! A continuación puede
+                            A continuación puede
                             encontrar el historial de conversaciones en español.
                           </Card.Text>
                           <Card.Text>
@@ -341,7 +380,9 @@ const Home = (props) => {
                             Qualtrics sobre su experiencia.
                           </Card.Text>
                           <Card.Title>Historial de conversación</Card.Title>
-                          <Card.Text>Amaya: ¡Hola, Kamil!</Card.Text>
+                          {convoInSpanish.map((value, index) => {
+                            return <Card.Text>{index % 2 == 0 ? englishSpeakerName + ": " + value : spanishSpeakerName + ": " + value}</Card.Text>
+                        })}
                           <div id="green-button">
                             <Button> Responde La Encuesta</Button>
                           </div>
