@@ -83,7 +83,7 @@ Label {
   background-color: #d6e5e3;
 }
 
-#user-form > .btn-primary,
+#green-button > .btn-primary,
 .btn-primary:hover,
 .btn-primary:active,
 .btn-primary:visited {
@@ -92,43 +92,11 @@ Label {
   color: black;
 }
 
-#translation-window2 > .btn-primary,
-.btn-primary:hover,
-.btn-primary:active,
-.btn-primary:visited {
-  background-color: #d6e5e3 !important;
-  border-color: #d6e5e3 !important;
-  color: black;
-}
-
-#feedback-buttons > .btn-primary,
-.btn-primary:hover,
-.btn-primary:active,
-.btn-primary:visited {
-  background-color: #d6e5e3 !important;
-  border-color: #d6e5e3 !important;
-  color: black;
-}
-
-#translation-form1 > .btn-primary,
+#white-button > .btn-primary,
 .btn-primary:hover,
 .btn-primary:active,
 .btn-primary:visited {
   background-color: #fff !important;
   border-color: #fff !important;
   color: black;
-}
-
-#conversation-history > .btn-primary,
-.btn-primary:hover,
-.btn-primary:active,
-.btn-primary:visited {
-  background-color: #fff !important;
-  border-color: #fff !important;
-  color: black;
-}
-
-#summary-card {
-  padding-right: 10%;
-  overflow-y: auto;
 }
