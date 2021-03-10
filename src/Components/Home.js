@@ -5,6 +5,7 @@ import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
 import Tabs from "react-bootstrap/Tabs";
 import Tab from "react-bootstrap/Tab";
+import document from "react-dom";
 import { FiThumbsUp, FiThumbsDown } from "react-icons/fi";
 import { Link, Element, animateScroll } from "react-scroll";
 import { setCORS } from "google-translate-api-browser";
@@ -22,8 +23,7 @@ const Home = (props) => {
   const [totalSpanishCount, setTotalSpanishCount] = React.useState(0);
   const [convoInEnglish, setConvoInEnglish] = React.useState([]);
   const [convoInSpanish, setConvoInSpanish] = React.useState([]);
-
-
+  const [theText, setTheText] = React.useState(null);
 
   const translate = setCORS("http://cors-anywhere.herokuapp.com/");
 
@@ -105,43 +105,44 @@ const Home = (props) => {
   };
 
   const onThumbsUp = () => {
-    if(englishTurn){
-        let oldTotalCount = totalEnglishCount;
-        oldTotalCount +=1;
-        setTotalEnglishCount(oldTotalCount);
+    if (englishTurn) {
+      let oldTotalCount = totalEnglishCount;
+      oldTotalCount += 1;
+      setTotalEnglishCount(oldTotalCount);
 
-        let oldUnderstoodCount = understoodEnglishCount;
-        oldUnderstoodCount +=1;
-        setUnderstoodEnglishCount(oldUnderstoodCount);
-    }else{
-        let oldTotalCount = totalSpanishCount;
-        oldTotalCount +=1;
-        setTotalSpanishCount(oldTotalCount);
+      let oldUnderstoodCount = understoodEnglishCount;
+      oldUnderstoodCount += 1;
+      setUnderstoodEnglishCount(oldUnderstoodCount);
+    } else {
+      let oldTotalCount = totalSpanishCount;
+      oldTotalCount += 1;
+      setTotalSpanishCount(oldTotalCount);
 
-        let oldCount = understoodSpanishCount;
-        oldCount +=1;
-        setUnderstoodSpanishCount(oldCount);
+      let oldCount = understoodSpanishCount;
+      oldCount += 1;
+      setUnderstoodSpanishCount(oldCount);
     }
   };
 
   const onThumbsDown = () => {
-    if(englishTurn){
-        let oldTotalCount = totalEnglishCount;
-        oldTotalCount +=1;
-        setTotalEnglishCount(oldTotalCount);
-    }else{
-        let oldTotalCount = totalSpanishCount;
-        oldTotalCount +=1;
-        setTotalSpanishCount(oldTotalCount);
+    if (englishTurn) {
+      let oldTotalCount = totalEnglishCount;
+      oldTotalCount += 1;
+      setTotalEnglishCount(oldTotalCount);
+    } else {
+      let oldTotalCount = totalSpanishCount;
+      oldTotalCount += 1;
+      setTotalSpanishCount(oldTotalCount);
     }
   };
 
   const translateText = async () => {
+    setTheText("");
     console.log(textToTranslate);
 
     if (textToTranslate != null) {
       if (englishTurn) {
-          convoInEnglish.push(textToTranslate);
+        convoInEnglish.push(textToTranslate);
         //english to spanish
         translate(textToTranslate, { to: "es" })
           .then((res) => {
@@ -153,7 +154,7 @@ const Home = (props) => {
             console.error(err);
           });
       } else {
-          convoInSpanish.push(textToTranslate);
+        convoInSpanish.push(textToTranslate);
         //spanish to english
         translate(textToTranslate, { to: "en" })
           .then((res) => {
@@ -239,28 +240,34 @@ const Home = (props) => {
                     <br></br>
                     <br></br>
                     <Form.Control
+                      id="myForm"
+                      className="form"
                       as="textarea"
                       rows={15}
-                      onChange={(e) => setTextToTranslate(e.target.value)}
+                      value={theText}
+                      onChange={(e) => {
+                        setTheText(e.target.value);
+                        setTextToTranslate(e.target.value);
+                      }}
                     />
                   </Form.Group>
+                  <Link
+                    activeClass="active"
+                    to="translation-results"
+                    spy={true}
+                    smooth={true}
+                    offset={0}
+                    duration={500}
+                  >
+                    <div id="white-button">
+                      <Button type="reset" onClick={translateText}>
+                        {getFixedTranslatedString("translation-window3")}
+                      </Button>
+                    </div>
+                  </Link>
                 </Form>
                 <br></br>
                 <br></br>
-                <Link
-                  activeClass="active"
-                  to="translation-results"
-                  spy={true}
-                  smooth={true}
-                  offset={0}
-                  duration={500}
-                >
-                  <div id="white-button">
-                    <Button onClick={translateText}>
-                      {getFixedTranslatedString("translation-window3")}
-                    </Button>
-                  </div>
-                </Link>
               </div>
             </div>
             <Element name="translation-results" className="element"></Element>
@@ -347,10 +354,21 @@ const Home = (props) => {
                       <Tab eventKey="english" title="English">
                         <br></br>
                         <Card.Body>
-                          {understoodEnglishCount == totalEnglishCount ? <Card.Text>Your conversation is complete! Congrats! Everything you said was understood by {spanishSpeakerName}.</Card.Text> : <Card.Text>Not everything you said was understood by {spanishSpeakerName}.</Card.Text>}
+                          {understoodEnglishCount == totalEnglishCount ? (
+                            <Card.Text>
+                              Your conversation is complete! Congrats!
+                              Everything you said was understood by{" "}
+                              {spanishSpeakerName}.
+                            </Card.Text>
+                          ) : (
+                            <Card.Text>
+                              Not everything you said was understood by{" "}
+                              {spanishSpeakerName}.
+                            </Card.Text>
+                          )}
                           <Card.Text>
-                            Below you can find
-                            the conversation history in English.
+                            Below you can find the conversation history in
+                            English.
                           </Card.Text>
                           <Card.Text>
                             After reviewing your conversation, please click the
@@ -359,8 +377,14 @@ const Home = (props) => {
                           </Card.Text>
                           <Card.Title>Conversation History</Card.Title>
                           {convoInEnglish.map((value, index) => {
-                            return <Card.Text>{index % 2 == 0 ? englishSpeakerName + ": " + value : spanishSpeakerName + ": " + value}</Card.Text>
-                        })}
+                            return (
+                              <Card.Text>
+                                {index % 2 == 0
+                                  ? englishSpeakerName + ": " + value
+                                  : spanishSpeakerName + ": " + value}
+                              </Card.Text>
+                            );
+                          })}
                           <div id="green-button">
                             <Button>Answer the Survey</Button>
                           </div>
@@ -369,10 +393,21 @@ const Home = (props) => {
                       <Tab eventKey="spanish" title="Español">
                         <br></br>
                         <Card.Body>
-                          {understoodSpanishCount == totalSpanishCount ? <Card.Text>¡Tu conversación está completa! ¡Felicitaciones! Todo lo que dijiste fue entendido por {englishSpeakerName}.</Card.Text> : <Card.Text>{englishSpeakerName} no entendió todo lo que dijiste.</Card.Text>}
+                          {understoodSpanishCount == totalSpanishCount ? (
+                            <Card.Text>
+                              ¡Tu conversación está completa! ¡Felicitaciones!
+                              Todo lo que dijiste fue entendido por{" "}
+                              {englishSpeakerName}.
+                            </Card.Text>
+                          ) : (
+                            <Card.Text>
+                              {englishSpeakerName} no entendió todo lo que
+                              dijiste.
+                            </Card.Text>
+                          )}
                           <Card.Text>
-                            A continuación puede
-                            encontrar el historial de conversaciones en español.
+                            A continuación puede encontrar el historial de
+                            conversaciones en español.
                           </Card.Text>
                           <Card.Text>
                             Después de revisar su conversación, haga clic en el
@@ -381,8 +416,14 @@ const Home = (props) => {
                           </Card.Text>
                           <Card.Title>Historial de conversación</Card.Title>
                           {convoInSpanish.map((value, index) => {
-                            return <Card.Text>{index % 2 == 0 ? englishSpeakerName + ": " + value : spanishSpeakerName + ": " + value}</Card.Text>
-                        })}
+                            return (
+                              <Card.Text>
+                                {index % 2 == 0
+                                  ? englishSpeakerName + ": " + value
+                                  : spanishSpeakerName + ": " + value}
+                              </Card.Text>
+                            );
+                          })}
                           <div id="green-button">
                             <Button> Responde La Encuesta</Button>
                           </div>
