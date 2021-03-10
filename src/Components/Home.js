@@ -5,9 +5,11 @@ import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
 import Tabs from "react-bootstrap/Tabs";
 import Tab from "react-bootstrap/Tab";
-import document from "react-dom";
+import Container from "react-bootstrap/Container";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
 import { FiThumbsUp, FiThumbsDown } from "react-icons/fi";
-import { Link, Element, animateScroll } from "react-scroll";
+import { Link, Element } from "react-scroll";
 import { setCORS } from "google-translate-api-browser";
 
 const Home = (props) => {
@@ -21,9 +23,10 @@ const Home = (props) => {
   const [totalEnglishCount, setTotalEnglishCount] = React.useState(0);
   const [understoodSpanishCount, setUnderstoodSpanishCount] = React.useState(0);
   const [totalSpanishCount, setTotalSpanishCount] = React.useState(0);
-  const [convoInEnglish, setConvoInEnglish] = React.useState([]);
-  const [convoInSpanish, setConvoInSpanish] = React.useState([]);
+  const [convoInEnglish2, setConvoInEnglish2] = React.useState([]);
+  const [convoInSpanish2, setConvoInSpanish2] = React.useState([]);
   const [theText, setTheText] = React.useState(null);
+  const [understood, setUnderstood] = React.useState(null);
 
   const translate = setCORS("http://cors-anywhere.herokuapp.com/");
 
@@ -105,6 +108,9 @@ const Home = (props) => {
   };
 
   const onThumbsUp = () => {
+    convoInEnglish2[convoInEnglish2.length - 1].understood = true;
+    convoInSpanish2[convoInSpanish2.length - 1].understood = true;
+
     if (englishTurn) {
       let oldTotalCount = totalEnglishCount;
       oldTotalCount += 1;
@@ -125,6 +131,9 @@ const Home = (props) => {
   };
 
   const onThumbsDown = () => {
+    convoInEnglish2[convoInEnglish2.length - 1].understood = false;
+    convoInSpanish2[convoInSpanish2.length - 1].understood = false;
+
     if (englishTurn) {
       let oldTotalCount = totalEnglishCount;
       oldTotalCount += 1;
@@ -142,25 +151,59 @@ const Home = (props) => {
 
     if (textToTranslate != null) {
       if (englishTurn) {
-        convoInEnglish.push(textToTranslate);
+        let thisTranslation = {
+          whatTheySaid: textToTranslate,
+          understood: null,
+        };
+
+        convoInEnglish2.push(thisTranslation);
+        console.log(convoInEnglish2);
+        setUnderstood(null);
+
         //english to spanish
         translate(textToTranslate, { to: "es" })
           .then((res) => {
             console.log(res.text);
+
+            let thisTranslation = {
+              whatTheySaid: res.text,
+              understood: null,
+            };
+
             setTranslatedText(res.text);
-            convoInSpanish.push(res.text);
+            convoInSpanish2.push(thisTranslation);
+            console.log(convoInSpanish2);
+            setUnderstood(null);
           })
           .catch((err) => {
             console.error(err);
           });
       } else {
-        convoInSpanish.push(textToTranslate);
+        let thisTranslation = {
+          whatTheySaid: textToTranslate,
+          understood: null,
+        };
+
+        convoInSpanish2.push(thisTranslation);
+        console.log(convoInSpanish2);
+
+        setUnderstood(null);
+
         //spanish to english
         translate(textToTranslate, { to: "en" })
           .then((res) => {
             console.log(res.text);
             setTranslatedText(res.text);
-            convoInEnglish.push(res.text);
+
+            let thisTranslation = {
+              whatTheySaid: res.text,
+              understood: null,
+            };
+
+            convoInEnglish2.push(thisTranslation);
+            console.log(convoInEnglish2);
+
+            setUnderstood(null);
           })
           .catch((err) => {
             console.error(err);
@@ -375,16 +418,104 @@ const Home = (props) => {
                             button below to complete a Qualtrics survey about
                             your experience.
                           </Card.Text>
-                          <Card.Title>Conversation History</Card.Title>
-                          {convoInEnglish.map((value, index) => {
-                            return (
-                              <Card.Text>
-                                {index % 2 == 0
-                                  ? englishSpeakerName + ": " + value
-                                  : spanishSpeakerName + ": " + value}
-                              </Card.Text>
-                            );
-                          })}
+                          <div id="move-to-th-left">
+                            <Card.Title>Conversation History</Card.Title>
+                          </div>
+                          <Container>
+                            {convoInEnglish2.map((value, index) => {
+                              if (value != null) {
+                                if (value.understood != null) {
+                                  if (value.understood && index % 2 == 0) {
+                                    return (
+                                      <Row>
+                                        <Col>
+                                          <FiThumbsUp />
+                                        </Col>
+                                        <Col xs={11}>
+                                          {englishSpeakerName +
+                                            ": " +
+                                            value.whatTheySaid}
+                                        </Col>
+                                      </Row>
+                                    );
+                                  } else if (
+                                    value.understood &&
+                                    index % 2 != 0
+                                  ) {
+                                    return (
+                                      <Row>
+                                        <Col>
+                                          <FiThumbsUp />
+                                        </Col>
+                                        <Col xs={11}>
+                                          {spanishSpeakerName +
+                                            ": " +
+                                            value.whatTheySaid}
+                                        </Col>
+                                      </Row>
+                                    );
+                                  } else if (
+                                    !value.understood &&
+                                    index % 2 == 0
+                                  ) {
+                                    return (
+                                      <Row>
+                                        <Col>
+                                          <FiThumbsDown />
+                                        </Col>
+                                        <Col xs={11}>
+                                          {englishSpeakerName +
+                                            ": " +
+                                            value.whatTheySaid}
+                                        </Col>
+                                      </Row>
+                                    );
+                                  } else if (
+                                    !value.understood &&
+                                    index % 2 != 0
+                                  ) {
+                                    return (
+                                      <Row>
+                                        <Col>
+                                          <FiThumbsDown />
+                                        </Col>
+                                        <Col xs={11}>
+                                          {spanishSpeakerName +
+                                            ": " +
+                                            value.whatTheySaid}
+                                        </Col>
+                                      </Row>
+                                    );
+                                  }
+                                } else {
+                                  if (index % 2 == 0) {
+                                    return (
+                                      <Row>
+                                        <Col></Col>
+                                        <Col xs={11}>
+                                          {englishSpeakerName +
+                                            ": " +
+                                            value.whatTheySaid}
+                                        </Col>
+                                      </Row>
+                                    );
+                                  } else {
+                                    return (
+                                      <Row>
+                                        <Col></Col>
+                                        <Col xs={11}>
+                                          {spanishSpeakerName +
+                                            ": " +
+                                            value.whatTheySaid}
+                                        </Col>
+                                      </Row>
+                                    );
+                                  }
+                                }
+                              }
+                            })}
+                          </Container>
+                          <br></br>
                           <div id="green-button">
                             <Button>Answer the Survey</Button>
                           </div>
@@ -414,16 +545,104 @@ const Home = (props) => {
                             botón a continuación para completar una encuesta de
                             Qualtrics sobre su experiencia.
                           </Card.Text>
-                          <Card.Title>Historial de conversación</Card.Title>
-                          {convoInSpanish.map((value, index) => {
-                            return (
-                              <Card.Text>
-                                {index % 2 == 0
-                                  ? englishSpeakerName + ": " + value
-                                  : spanishSpeakerName + ": " + value}
-                              </Card.Text>
-                            );
-                          })}
+                          <div id="move-to-th-left">
+                            <Card.Title>Historial de Conversación</Card.Title>
+                          </div>
+                          <Container>
+                            {convoInSpanish2.map((value, index) => {
+                              if (value != null) {
+                                if (value.understood != null) {
+                                  if (value.understood && index % 2 == 0) {
+                                    return (
+                                      <Row>
+                                        <Col>
+                                          <FiThumbsUp />
+                                        </Col>
+                                        <Col xs={11}>
+                                          {englishSpeakerName +
+                                            ": " +
+                                            value.whatTheySaid}
+                                        </Col>
+                                      </Row>
+                                    );
+                                  } else if (
+                                    value.understood &&
+                                    index % 2 != 0
+                                  ) {
+                                    return (
+                                      <Row>
+                                        <Col>
+                                          <FiThumbsUp />
+                                        </Col>
+                                        <Col xs={11}>
+                                          {spanishSpeakerName +
+                                            ": " +
+                                            value.whatTheySaid}
+                                        </Col>
+                                      </Row>
+                                    );
+                                  } else if (
+                                    !value.understood &&
+                                    index % 2 == 0
+                                  ) {
+                                    return (
+                                      <Row>
+                                        <Col>
+                                          <FiThumbsDown />
+                                        </Col>
+                                        <Col xs={11}>
+                                          {englishSpeakerName +
+                                            ": " +
+                                            value.whatTheySaid}
+                                        </Col>
+                                      </Row>
+                                    );
+                                  } else if (
+                                    !value.understood &&
+                                    index % 2 != 0
+                                  ) {
+                                    return (
+                                      <Row>
+                                        <Col>
+                                          <FiThumbsDown />
+                                        </Col>
+                                        <Col xs={11}>
+                                          {spanishSpeakerName +
+                                            ": " +
+                                            value.whatTheySaid}
+                                        </Col>
+                                      </Row>
+                                    );
+                                  }
+                                } else {
+                                  if (index % 2 == 0) {
+                                    return (
+                                      <Row>
+                                        <Col></Col>
+                                        <Col xs={11}>
+                                          {englishSpeakerName +
+                                            ": " +
+                                            value.whatTheySaid}
+                                        </Col>
+                                      </Row>
+                                    );
+                                  } else {
+                                    return (
+                                      <Row>
+                                        <Col></Col>
+                                        <Col xs={11}>
+                                          {spanishSpeakerName +
+                                            ": " +
+                                            value.whatTheySaid}
+                                        </Col>
+                                      </Row>
+                                    );
+                                  }
+                                }
+                              }
+                            })}
+                          </Container>
+                          <br></br>
                           <div id="green-button">
                             <Button> Responde La Encuesta</Button>
                           </div>

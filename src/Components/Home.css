@@ -83,6 +83,14 @@ Label {
   background-color: #d6e5e3;
 }
 
+#summary-card{
+  width: 90%;
+}
+
+#move-to-th-left{
+  padding-left: 3%;
+}
+
 #green-button > .btn-primary,
 .btn-primary:hover,
 .btn-primary:active,
