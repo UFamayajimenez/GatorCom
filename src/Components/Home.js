@@ -516,9 +516,11 @@ const Home = (props) => {
                             })}
                           </Container>
                           <br></br>
-                          <div id="green-button">
-                            <Button>Answer the Survey</Button>
-                          </div>
+                          <a target="_blank" href="https://google.com">
+                            <div id="green-button">
+                              <Button> Answer the Survey</Button>
+                            </div>
+                          </a>
                         </Card.Body>
                       </Tab>
                       <Tab eventKey="spanish" title="Español">
@@ -643,9 +645,11 @@ const Home = (props) => {
                             })}
                           </Container>
                           <br></br>
-                          <div id="green-button">
-                            <Button> Responde La Encuesta</Button>
-                          </div>
+                          <a target="_blank" href="https://google.com">
+                            <div id="green-button">
+                              <Button> Responde La Encuesta</Button>
+                            </div>
+                          </a>
                         </Card.Body>
                       </Tab>
                     </Tabs>
